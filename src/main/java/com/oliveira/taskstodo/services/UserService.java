@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.oliveira.taskstodo.models.User;
-import com.oliveira.taskstodo.repositories.TaskRepository;
 import com.oliveira.taskstodo.repositories.UserRepository;
 
 import jakarta.transaction.Transactional;
@@ -17,8 +16,6 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private TaskRepository taskRepository;
 
     public User findById(Long id){
 
@@ -41,8 +38,6 @@ public class UserService {
         // if anyone send a obj with a new id, it will be reset the id in the Database
         // becouse this we need to reset the id here
         obj.setId(null);
-        // save all tasks
-        this.taskRepository.saveAll(obj.getTasks());
         return obj;
     }
 
