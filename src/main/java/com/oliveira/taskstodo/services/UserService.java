@@ -38,6 +38,7 @@ public class UserService {
         // if anyone send a obj with a new id, it will be reset the id in the Database
         // becouse this we need to reset the id here
         obj.setId(null);
+        this.userRepository.save(obj);
         return obj;
     }
 

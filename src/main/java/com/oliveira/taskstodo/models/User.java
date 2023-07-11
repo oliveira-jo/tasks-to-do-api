@@ -19,10 +19,17 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
+//import lombok.AllArgsConstructor;
+//import lombok.Data;
+//import lombok.NoArgsContructor;
+
 //Add notations to generete the data base configuration
 
 @Entity //Create a table 
 @Table(name = User.TABLE_NAME)
+//@AllArgsConstructor
+//@NoArgsContructor 
+//@Data
 public class User {
 
     // Business rule
@@ -41,15 +48,14 @@ public class User {
     //The primitive tipe (int) may couse an execute error or to null pointer   
     // Ando for id is betther use ass (Long)
     @Id
+    @Column(name = "id", unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", unique = true) // not repeat ids
     private Long id;
+
 
 
     @Column(name = "username", length = 100, nullable = false, unique = true)
     @NotNull(groups = CreateUser.class)
-    
-    
     // In this case it's possible verificate just in Create User, becouse 
     // the name con't be update for the business rule 
     @NotEmpty(groups = CreateUser.class)
@@ -61,8 +67,6 @@ public class User {
     // create the password and never retur it's to the front, 
     // never retur to the user
     @JsonProperty(access = Access.WRITE_ONLY)
-
-
     @Column(name = "password", length = 60, nullable = false)
     @NotNull(groups = {CreateUser.class, UpdateUser.class})
     // In this case it's need to verificat when Create and when Update
@@ -78,6 +82,7 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Task> tasks = new ArrayList<Task>();
 
+    
     public User(){
 
     }
