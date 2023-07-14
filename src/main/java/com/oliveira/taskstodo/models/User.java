@@ -24,7 +24,7 @@ import lombok.Setter;
 
 @Entity 
 @Table(name = User.TABLE_NAME)
-@AllArgsConstructor
+@AllArgsConstructor // All this lombok can be replace for @Date - little different
 @NoArgsConstructor
 @Getter
 @Setter
