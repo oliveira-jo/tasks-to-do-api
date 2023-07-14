@@ -2,9 +2,7 @@ package com.oliveira.taskstodo.models;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
@@ -18,18 +16,19 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-//import lombok.AllArgsConstructor;
-//import lombok.Data;
-//import lombok.NoArgsContructor;
-
-//Add notations to generete the data base configuration
-
-@Entity //Create a table 
+@Entity 
 @Table(name = User.TABLE_NAME)
-//@AllArgsConstructor
-//@NoArgsContructor 
-//@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@EqualsAndHashCode
 public class User {
 
     // Business rule
@@ -51,7 +50,6 @@ public class User {
     @Column(name = "id", unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
 
 
     @Column(name = "username", length = 100, nullable = false, unique = true)
@@ -80,82 +78,8 @@ public class User {
     // Can't add this list in the constructors, don't to use to do that
     //      -> bad performance
     @OneToMany(mappedBy = "user")
+    @JsonProperty(access = Access.WRITE_ONLY)
     private List<Task> tasks = new ArrayList<Task>();
 
-    
-    public User(){
-
-    }
-
-    public User(Long id, String username, String password) {
-        this.id = id;
-        this.username = username;
-        this.password = password;
-    }
-
-    public Long getId() {
-        return this.id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getUsername() {
-        return this.username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return this.password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-    
-    // Ignore tasks when search gor user
-    // to do only dates to processed from user
-    @JsonIgnore 
-    public List<Task> getTasks() {
-        return this.tasks;
-    }
-
-    public void setTasks(List<Task> tasks) {
-        this.tasks = tasks;
-    }
-
-
-    @Override
-    public boolean equals(Object object) {
-        if (object == this)
-            return true;
-        if (object == null)
-            return false;
-        if (!(object instanceof User))
-            return false;
-        User other = (User) object;
-        if (this.id == null) // one ins null and other not, not the same obj
-            if (other.id != null)
-                return false;
-            else if (!this.id.equals(other.id))
-                return false;
-        return Objects.equals(this.id, other.id) && 
-                Objects.equals(this.username, other.username) && 
-                Objects.equals(this.password, other.password);
-                //compost verification in the return to see if is the same object
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31; //aleatory number
-        int result = 1; // to generete hash code
-        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-        //operador ternario vigente  ? Se : senão  -> recursiv here
-        return result;
-    }
     
 }
