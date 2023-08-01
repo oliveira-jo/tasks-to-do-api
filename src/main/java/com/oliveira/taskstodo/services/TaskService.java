@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import com.oliveira.taskstodo.models.Task;
 import com.oliveira.taskstodo.models.User;
 import com.oliveira.taskstodo.repositories.TaskRepository;
+import com.oliveira.taskstodo.services.exceptions.DataBindingViolationException;
+import com.oliveira.taskstodo.services.exceptions.ObjectNotFoundException;
 
 import jakarta.transaction.Transactional;
 
@@ -23,7 +25,7 @@ public class TaskService {
 
     public Task findById(Long id){
         Optional<Task> task = this.taskRepository.findById(id);
-        return task.orElseThrow(() -> new RuntimeException(
+        return task.orElseThrow(() -> new ObjectNotFoundException(
             "Tarefa não encontrada! id: " + id + ", Tipo: " + Task.class.getName()));
     }
 
@@ -54,7 +56,7 @@ public class TaskService {
         try {
             this.taskRepository.deleteById(id);
         } catch (Exception e) {
-            throw new RuntimeException("Não é possivel excluir pois há entidades relacionadas!");
+            throw new DataBindingViolationException("Não é possivel excluir pois há entidades relacionadas!");
         }
     }
 

@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 import com.oliveira.taskstodo.models.User;
 import com.oliveira.taskstodo.repositories.UserRepository;
+import com.oliveira.taskstodo.services.exceptions.DataBindingViolationException;
+import com.oliveira.taskstodo.services.exceptions.ObjectNotFoundException;
 
 import jakarta.transaction.Transactional;
 
@@ -24,7 +26,7 @@ public class UserService {
         //in this case using an Arrow Funcion an fuincion inside the other
 
         // new Exception -> stop application and new RuntimeException -> just show without stop 
-        return user.orElseThrow(() -> new RuntimeException(
+        return user.orElseThrow(() -> new ObjectNotFoundException( //exception created in exceptions
             "Usuário não encontrado! id: " + id + ", Tipo: " + User.class.getName()
         ));
 
@@ -63,7 +65,7 @@ public class UserService {
         try {
             this.userRepository.deleteById(id);
         } catch (Exception e) {
-            throw new RuntimeException("Não é possivel excluir porque há entidades relacionadas!");
+            throw new DataBindingViolationException("Não é possivel excluir porque há entidades relacionadas!");
         }
     }
 
