@@ -1,11 +1,15 @@
 package com.oliveira.taskstodo.services;
 
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.oliveira.taskstodo.models.User;
+import com.oliveira.taskstodo.models.enums.ProfileEnum;
 import com.oliveira.taskstodo.repositories.UserRepository;
 import com.oliveira.taskstodo.services.exceptions.DataBindingViolationException;
 import com.oliveira.taskstodo.services.exceptions.ObjectNotFoundException;
@@ -15,6 +19,9 @@ import jakarta.transaction.Transactional;
 @Service
 public class UserService {
     
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
     @Autowired
     private UserRepository userRepository;
 
@@ -40,6 +47,9 @@ public class UserService {
         // if anyone send a obj with a new id, it will be reset the id in the Database
         // becouse this we need to reset the id here
         obj.setId(null);
+        //encrypt password
+        obj.setPassword(this.bCryptPasswordEncoder.encode(obj.getPassword()));
+        obj.setProfiles(Stream.of(ProfileEnum.USER.getCode()).collect(Collectors.toSet()));
         this.userRepository.save(obj);
         return obj;
     }
@@ -50,6 +60,8 @@ public class UserService {
         User newObj = findById(obj.getId());
         // User can update only the password
         newObj.setPassword(obj.getPassword());
+        //encrypt password
+        newObj.setPassword(this.bCryptPasswordEncoder.encode(obj.getPassword()));
         return this.userRepository.save(newObj);
     }
 
