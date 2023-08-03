@@ -54,13 +54,14 @@ public class SecurityConfig {
 //                .passwordEncoder(bCryptPasswordEncoder());
 //            this.authenticationManager = authenticationManagerBuilder.build();
 
-            http.authorizeHttpRequests((authz) -> authz
+            http.authorizeHttpRequests( authz -> authz
                 .requestMatchers(mvcMatcherBuilder.pattern(HttpMethod.POST, "/user")).permitAll()
                 .requestMatchers(mvcMatcherBuilder.pattern(HttpMethod.POST, "/login")).permitAll()
                 //.requestMatchers(HttpMethod.POST, PUBLIC_MATCHERS_POST).permitAll()
                 .requestMatchers(mvcMatcherBuilder.pattern("/")).permitAll()
                 //.requestMatchers(PUBLIC_MATCHERS).permitAll()
-                .anyRequest().authenticated());
+                .anyRequest().authenticated()
+            );
 
 //            http.addFilter(new JWTAuthenticationFilter(this.authenticationManager, this.jwtUtil));
 //            http.addFilter(new JWTAuthorizationFilter(this.authenticationManager, this.jwtUtil,
