@@ -47,8 +47,10 @@ public class UserService {
         // if anyone send a obj with a new id, it will be reset the id in the Database
         // becouse this we need to reset the id here
         obj.setId(null);
-        //encrypt password
+        //save encrypt password
         obj.setPassword(this.bCryptPasswordEncoder.encode(obj.getPassword()));
+        // code of user (ProfileEnum.USER.getCode())
+        // guarantee to save the type of user 
         obj.setProfiles(Stream.of(ProfileEnum.USER.getCode()).collect(Collectors.toSet()));
         this.userRepository.save(obj);
         return obj;
@@ -60,7 +62,7 @@ public class UserService {
         User newObj = findById(obj.getId());
         // User can update only the password
         newObj.setPassword(obj.getPassword());
-        //encrypt password
+        //update encrypt password
         newObj.setPassword(this.bCryptPasswordEncoder.encode(obj.getPassword()));
         return this.userRepository.save(newObj);
     }

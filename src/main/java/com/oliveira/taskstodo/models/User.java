@@ -89,16 +89,17 @@ public class User {
     private List<Task> tasks = new ArrayList<Task>();
 
     //can be user and admin
-    //set can't repeat numbers or objects
+    //set can't permit repeat values
     @ElementCollection(fetch = FetchType.EAGER) // ever get profile when get user
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) // dont's return to user his profiles
-    @CollectionTable(name = "user_prifile")
+    @CollectionTable(name = "user_profile")
     @Column(name = "profile", nullable = false)
     private Set<Integer> profiles = new HashSet<>();
-
-
+    
+    // transform Integer in set profile of enum
     public Set<ProfileEnum> getProfiles(){
-        return this.profiles.stream().map(x -> ProfileEnum.toEnum(x)).collect(Collectors.toSet());
+        return this.profiles.stream().map(
+            x -> ProfileEnum.toEnum(x)).collect(Collectors.toSet());
     }
 
     public void addProfile(ProfileEnum profileEnum) {

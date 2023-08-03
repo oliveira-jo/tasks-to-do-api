@@ -11,18 +11,26 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity //@EnableGlobalMethodSecurity(prePostEnabled = true) / deprecat 
+@EnableMethodSecurity
 public class SecurityConfig {
 
+        //private AuthenticationManager authenticationManager;
 
-        //public system rout 
-        private static final String[] PUBLIC_MATCHERS = { 
+        //@Autowired
+        //private UserDetailsService userDetailsService;
+
+        //@Autowired
+        //private JWTUtil jwtUtil;
+
+        private static final String[] PUBLIC_MATCHERS = {
             "/"
         };
         
@@ -32,40 +40,50 @@ public class SecurityConfig {
         };
 
         @Bean
-        public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        public SecurityFilterChain filterChain(HttpSecurity http, HandlerMappingIntrospector introspector) throws Exception {
+
+            MvcRequestMatcher.Builder mvcMatcherBuilder = new MvcRequestMatcher.Builder(introspector);
 
             //http.cors().and().csrf().disable();
-
             http.cors(cors -> cors.disable());
-
             http.csrf(csrf -> csrf.disable());
             
-            //.antMatchers(HttpMethod.POST, PUBLIC_MATCHERS_POST).permitAll()
-            //.antMatchers(PUBLIC_MATCHERS).permitAll()
-            http.authorizeHttpRequests( authz -> authz
-                .requestMatchers(HttpMethod.POST, PUBLIC_MATCHERS_POST).permitAll()
-                .requestMatchers(PUBLIC_MATCHERS).permitAll()
+//            AuthenticationManagerBuilder authenticationManagerBuilder = http
+//                .getSharedObject(AuthenticationManagerBuilder.class);
+//            authenticationManagerBuilder.userDetailsService(this.userDetailsService)
+//                .passwordEncoder(bCryptPasswordEncoder());
+//            this.authenticationManager = authenticationManagerBuilder.build();
+
+            http.authorizeHttpRequests((authz) -> authz
+                .requestMatchers(mvcMatcherBuilder.pattern(HttpMethod.POST, "/user")).permitAll()
+                .requestMatchers(mvcMatcherBuilder.pattern(HttpMethod.POST, "/login")).permitAll()
+                //.requestMatchers(HttpMethod.POST, PUBLIC_MATCHERS_POST).permitAll()
+                .requestMatchers(mvcMatcherBuilder.pattern("/")).permitAll()
+                //.requestMatchers(PUBLIC_MATCHERS).permitAll()
                 .anyRequest().authenticated());
 
+//            http.addFilter(new JWTAuthenticationFilter(this.authenticationManager, this.jwtUtil));
+//            http.addFilter(new JWTAuthorizationFilter(this.authenticationManager, this.jwtUtil,
+//                            this.userDetailsService));
 
-            //http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-            http.sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+            http.sessionManagement(sessionManagement -> sessionManagement
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
             return http.build();
         }
 
-        @Bean // Ensure that there is no cor's problen  
+        @Bean
         CorsConfigurationSource corsConfigurationSource() {
-            CorsConfiguration configuration = new CorsConfiguration().applyPermitDefaultValues();
-            configuration.setAllowedMethods(Arrays.asList("POST", "GET", "PUT", "DELETE"));
-            final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-            source.registerCorsConfiguration("/**", configuration);
-            return source;
+                CorsConfiguration configuration = new CorsConfiguration().applyPermitDefaultValues();
+                configuration.setAllowedMethods(Arrays.asList("POST", "GET", "PUT", "DELETE"));
+                final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+                source.registerCorsConfiguration("/**", configuration);
+                return source;
         }
 
-        @Bean // Use to Encrypt
+        @Bean
         public BCryptPasswordEncoder bCryptPasswordEncoder() {
-            return new BCryptPasswordEncoder();
+                return new BCryptPasswordEncoder();
         }
 
 }
