@@ -21,6 +21,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
+import com.oliveira.taskstodo.security.JWTAuthenticationFilter;
 import com.oliveira.taskstodo.security.JWTUtil;
 
 @Configuration
@@ -69,7 +70,9 @@ public class SecurityConfig {
                 .anyRequest().authenticated()
             );
 
-//            http.addFilter(new JWTAuthenticationFilter(this.authenticationManager, this.jwtUtil));
+            http.authenticationManager(authenticationManager);
+
+            http.addFilter(new JWTAuthenticationFilter(this.authenticationManager, this.jwtUtil));
 //            http.addFilter(new JWTAuthorizationFilter(this.authenticationManager, this.jwtUtil,
 //                            this.userDetailsService));
 
