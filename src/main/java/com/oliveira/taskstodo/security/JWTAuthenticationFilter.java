@@ -1,5 +1,6 @@
 package com.oliveira.taskstodo.security;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import jakarta.servlet.FilterChain;
@@ -14,7 +15,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oliveira.taskstodo.exceptions.GlobalExceptionHandler;
 import com.oliveira.taskstodo.models.User;
-import io.jsonwebtoken.io.IOException;
+
 
 // /login
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
@@ -41,8 +42,8 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
             Authentication authentication = this.authenticationManager.authenticate(authToken);
             return authentication;
-        } catch (Exception e) {
-            throw new RuntimeException();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
             
         }
     }
