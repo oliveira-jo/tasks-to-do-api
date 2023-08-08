@@ -7,8 +7,6 @@ import com.oliveira.taskstodo.models.User;
 import org.springframework.transaction.annotation.Transactional;
 
 
-
-
 // In this case, Spring Boot will be able to create the repository automatically
 // from auto configuration
 //@Repository

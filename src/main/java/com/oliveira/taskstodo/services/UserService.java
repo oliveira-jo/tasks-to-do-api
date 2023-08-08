@@ -1,20 +1,25 @@
 package com.oliveira.taskstodo.services;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.oliveira.taskstodo.models.User;
 import com.oliveira.taskstodo.models.enums.ProfileEnum;
 import com.oliveira.taskstodo.repositories.UserRepository;
+import com.oliveira.taskstodo.security.UserSpringSecurity;
+import com.oliveira.taskstodo.services.exceptions.AuthorizationException;
 import com.oliveira.taskstodo.services.exceptions.DataBindingViolationException;
 import com.oliveira.taskstodo.services.exceptions.ObjectNotFoundException;
 
-import jakarta.transaction.Transactional;
 
 @Service
 public class UserService {
@@ -27,6 +32,14 @@ public class UserService {
 
 
     public User findById(Long id){
+
+        // There are anyone logged / is admin / have the same id
+        UserSpringSecurity userSpringSecurity = authenticated();
+        if ( ! Objects.nonNull(userSpringSecurity)              
+                || !userSpringSecurity.hasRole(ProfileEnum.ADMIN) 
+                && !id.equals(userSpringSecurity.getId()))          
+            throw new AuthorizationException("Acesso negado!");
+        
 
         //return the user from database if existe or empy if not
         Optional<User> user = this.userRepository.findById(id);
@@ -80,6 +93,15 @@ public class UserService {
             this.userRepository.deleteById(id);
         } catch (Exception e) {
             throw new DataBindingViolationException("Não é possivel excluir porque há entidades relacionadas!");
+        }
+    }
+
+    //how is in the context in this moment, with have anybody authenticated
+    public static UserSpringSecurity authenticated() {
+        try {            
+            return (UserSpringSecurity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        } catch (AuthenticationException e) {
+            return null;
         }
     }
 

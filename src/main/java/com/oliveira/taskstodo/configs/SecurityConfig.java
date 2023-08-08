@@ -25,76 +25,74 @@ import com.oliveira.taskstodo.security.JWTAuthenticationFilter;
 import com.oliveira.taskstodo.security.JWTAuthorizationFilter;
 import com.oliveira.taskstodo.security.JWTUtil;
 
+
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
 
-        private AuthenticationManager authenticationManager;
+    private AuthenticationManager authenticationManager;
 
-        @Autowired
-        private UserDetailsService userDetailsService;
+    @Autowired
+    private UserDetailsService userDetailsService;
 
-        @Autowired
-        private JWTUtil jwtUtil;
+    @Autowired
+    private JWTUtil jwtUtil;
 
-        private static final String[] PUBLIC_MATCHERS = {
-            "/"
-        };
-        
-        private static final String[] PUBLIC_MATCHERS_POST = {
-            "/user",
-            "/login"
-        };
+    //private static final String[] PUBLIC_MATCHERS = { "/" };
+    //private static final String[] PUBLIC_MATCHERS_POST = { "/user", "/login" };
 
-        @Bean
-        public SecurityFilterChain filterChain(HttpSecurity http, HandlerMappingIntrospector introspector) throws Exception {
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http, HandlerMappingIntrospector introspector) throws Exception {
 
-            MvcRequestMatcher.Builder mvcMatcherBuilder = new MvcRequestMatcher.Builder(introspector);
+        MvcRequestMatcher.Builder mvcMatcherBuilder = new MvcRequestMatcher.Builder(introspector);
 
-            //http.cors().and().csrf().disable();
-            http.cors(cors -> cors.disable());
-            http.csrf(csrf -> csrf.disable());
-  
-            AuthenticationManagerBuilder authenticationManagerBuilder = http
-                .getSharedObject(AuthenticationManagerBuilder.class);
-            authenticationManagerBuilder.userDetailsService(this.userDetailsService)
-                .passwordEncoder(bCryptPasswordEncoder());
-            this.authenticationManager = authenticationManagerBuilder.build();
+        //http.cors().and().csrf().disable();
+        http.cors(cors -> cors.disable());
+        http.csrf(csrf -> csrf.disable());
 
-            http.authorizeHttpRequests( authz -> authz
-                .requestMatchers(mvcMatcherBuilder.pattern(HttpMethod.POST, "/user")).permitAll()
-                .requestMatchers(mvcMatcherBuilder.pattern(HttpMethod.POST, "/login")).permitAll()
-                //.requestMatchers(HttpMethod.POST, PUBLIC_MATCHERS_POST).permitAll()
-                .requestMatchers(mvcMatcherBuilder.pattern("/")).permitAll()
-                //.requestMatchers(PUBLIC_MATCHERS).permitAll()
-                .anyRequest().authenticated()
-            );
+        AuthenticationManagerBuilder authenticationManagerBuilder = http
+            .getSharedObject(AuthenticationManagerBuilder.class);
+        authenticationManagerBuilder.userDetailsService(this.userDetailsService)
+            .passwordEncoder(bCryptPasswordEncoder());
+        this.authenticationManager = authenticationManagerBuilder.build();
 
-            http.authenticationManager(authenticationManager);
+        http.authorizeHttpRequests( authz -> authz
+            .requestMatchers(mvcMatcherBuilder.pattern(HttpMethod.POST, "/user")).permitAll()
+            .requestMatchers(mvcMatcherBuilder.pattern(HttpMethod.POST, "/login")).permitAll()
+            //.requestMatchers(HttpMethod.POST, PUBLIC_MATCHERS_POST).permitAll()
 
-            http.addFilter(new JWTAuthenticationFilter(this.authenticationManager, this.jwtUtil));
-            http.addFilter(new JWTAuthorizationFilter(this.authenticationManager, this.jwtUtil,
-                            this.userDetailsService));
+            .requestMatchers(mvcMatcherBuilder.pattern("/**")).permitAll()
+            //.requestMatchers(PUBLIC_MATCHERS).permitAll()
 
-            http.sessionManagement(sessionManagement -> sessionManagement
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+            .anyRequest().authenticated()
+        );
 
-            return http.build();
-        }
+        http.authenticationManager(authenticationManager);
 
-        @Bean
-        CorsConfigurationSource corsConfigurationSource() {
-                CorsConfiguration configuration = new CorsConfiguration().applyPermitDefaultValues();
-                configuration.setAllowedMethods(Arrays.asList("POST", "GET", "PUT", "DELETE"));
-                final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-                source.registerCorsConfiguration("/**", configuration);
-                return source;
-        }
+        http.addFilter(new JWTAuthenticationFilter(this.authenticationManager, this.jwtUtil));
+        http.addFilter(new JWTAuthorizationFilter(this.authenticationManager, this.jwtUtil,
+                        this.userDetailsService));
 
-        @Bean
-        public BCryptPasswordEncoder bCryptPasswordEncoder() {
-                return new BCryptPasswordEncoder();
-        }
+        //policy without state
+        http.sessionManagement(sessionManagement -> sessionManagement
+            .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
+        return http.build();
+    }
+
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration().applyPermitDefaultValues();
+        configuration.setAllowedMethods(Arrays.asList("POST", "GET", "PUT", "DELETE"));
+        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
+
+    @Bean
+    public BCryptPasswordEncoder bCryptPasswordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
 }
