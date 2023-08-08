@@ -20,35 +20,22 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+
 
 @Entity 
 @Table(name = User.TABLE_NAME)
 @AllArgsConstructor // All this lombok can be replace for @Date - little different
 @NoArgsConstructor
-@Getter
-@Setter
-@EqualsAndHashCode
+@Data //@Getter @Setter @EqualsAndHashCode
 public class User {
-
-    // Business rule
-    // it's not possible to update user after it's creation
-    // no contract but in the creat the program needs to verify
-    // the determined rule 
-    // Validation User Create -> CreateUser.class
-    public interface CreateUser{}
-    // Validation User Update -> UpdateUser.class
-    public interface UpdateUser{}
-
+    
     public static final String TABLE_NAME = "user";
-
 
     //The recomendation is to use Integuer, not int
     //The primitive tipe (int) may couse an execute error or to null pointer   
@@ -60,24 +47,18 @@ public class User {
 
 
     @Column(name = "username", length = 100, nullable = false, unique = true)
-    @NotNull(groups = CreateUser.class)
-    // In this case it's possible verificate just in Create User, becouse 
-    // the name con't be update for the business rule 
-    @NotEmpty(groups = CreateUser.class)
-    @Size(groups = CreateUser.class, min = 2, max = 100)
+    @Size(min = 2, max = 100)
+    @NotBlank
     private String username;
     
 
     // Password just to read
     // create the password and never retur it's to the front, 
     // never retur to the user
-    @JsonProperty(access = Access.WRITE_ONLY)
     @Column(name = "password", length = 60, nullable = false)
-    @NotNull(groups = {CreateUser.class, UpdateUser.class})
-    // In this case it's need to verificat when Create and when Update
-    // Becouse it can be update password in both cases
-    @NotEmpty(groups = {CreateUser.class, UpdateUser.class})
-    @Size(groups = {CreateUser.class, UpdateUser.class}, min = 8, max = 60)
+    @JsonProperty(access = Access.WRITE_ONLY)
+    @Size(min = 8, max = 60)
+    @NotBlank
     private String password; 
 
 
@@ -90,10 +71,10 @@ public class User {
 
     //can be user and admin
     //set can't permit repeat values
-    @ElementCollection(fetch = FetchType.EAGER) // ever get profile when get user
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) // dont's return to user his profiles
-    @CollectionTable(name = "user_profile")
     @Column(name = "profile", nullable = false)
+    @ElementCollection(fetch = FetchType.EAGER) // ever get profile when get user
+    @CollectionTable(name = "user_profile")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) // dont's return to user his profiles
     private Set<Integer> profiles = new HashSet<>();
     
     // transform Integer in set profile of enum
@@ -105,4 +86,5 @@ public class User {
     public void addProfile(ProfileEnum profileEnum) {
         this.profiles.add(profileEnum.getCode());
     }
+
 }

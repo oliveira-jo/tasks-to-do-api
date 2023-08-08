@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 //import org.springframework.data.repository.query.Param;
 //import org.springframework.stereotype.Repository;
 import com.oliveira.taskstodo.models.Task;
+import com.oliveira.taskstodo.models.projection.TaskProjection;
 
 // In this case, Spring Boot will be able to create the repository automatically
 // from auto configuration
@@ -16,7 +17,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     //search for user id
     //Spring mode
     //Optional<Task>, anything that is null, put ampy. Function from java 8
-    List<Task> findByUser_Id(long id);
+    List<TaskProjection> findByUser_Id(long id);
 
     // Another Spring form, JPQL -> mix SQL and Funcions java
     // same return List<Task> of last one

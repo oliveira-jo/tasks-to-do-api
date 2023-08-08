@@ -13,12 +13,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.oliveira.taskstodo.models.User;
+import com.oliveira.taskstodo.models.dto.UserCreateDTO;
+import com.oliveira.taskstodo.models.dto.UserUpdateDTO;
 import com.oliveira.taskstodo.models.enums.ProfileEnum;
 import com.oliveira.taskstodo.repositories.UserRepository;
 import com.oliveira.taskstodo.security.UserSpringSecurity;
 import com.oliveira.taskstodo.services.exceptions.AuthorizationException;
 import com.oliveira.taskstodo.services.exceptions.DataBindingViolationException;
 import com.oliveira.taskstodo.services.exceptions.ObjectNotFoundException;
+
+import jakarta.validation.Valid;
 
 
 @Service
@@ -35,11 +39,10 @@ public class UserService {
 
         // There are anyone logged / is admin / have the same id
         UserSpringSecurity userSpringSecurity = authenticated();
-        if ( ! Objects.nonNull(userSpringSecurity)              
+        if ( !Objects.nonNull(userSpringSecurity)              
                 || !userSpringSecurity.hasRole(ProfileEnum.ADMIN) 
                 && !id.equals(userSpringSecurity.getId()))          
             throw new AuthorizationException("Acesso negado!");
-        
 
         //return the user from database if existe or empy if not
         Optional<User> user = this.userRepository.findById(id);
@@ -103,6 +106,20 @@ public class UserService {
         } catch (AuthenticationException e) {
             return null;
         }
+    }
+
+    public User fromDTO(@Valid UserCreateDTO obj) {
+        User user = new User();
+        user.setUsername(obj.getUsername());
+        user.setPassword(obj.getPassword());
+        return user;
+    }
+
+    public User fromDTO(@Valid UserUpdateDTO obj) {
+        User user = new User();
+        user.setId(obj.getId());
+        user.setPassword(obj.getPassword());
+        return user;
     }
 
 }

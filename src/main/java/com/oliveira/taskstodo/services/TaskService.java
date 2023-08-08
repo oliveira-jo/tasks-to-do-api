@@ -2,7 +2,6 @@ package com.oliveira.taskstodo.services;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.oliveira.taskstodo.models.Task;
 import com.oliveira.taskstodo.models.User;
 import com.oliveira.taskstodo.models.enums.ProfileEnum;
+import com.oliveira.taskstodo.models.projection.TaskProjection;
 import com.oliveira.taskstodo.repositories.TaskRepository;
 import com.oliveira.taskstodo.security.UserSpringSecurity;
 import com.oliveira.taskstodo.services.exceptions.AuthorizationException;
@@ -41,12 +41,12 @@ public class TaskService {
     }
 
     //find all Tasks of one user
-    public List<Task> findAllByUser(){
+    public List<TaskProjection> findAllByUser(){
         UserSpringSecurity userSpringSecurity = UserService.authenticated();
         if (Objects.isNull(userSpringSecurity))
             throw new AuthorizationException("Acesso negado!");
 
-        List<Task> tasks = this.taskRepository.findByUser_Id(userSpringSecurity.getId());
+        List<TaskProjection> tasks = this.taskRepository.findByUser_Id(userSpringSecurity.getId());
         return tasks;
     }
 
