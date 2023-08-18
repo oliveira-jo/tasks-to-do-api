@@ -13,6 +13,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oliveira.taskstodo.exceptions.GlobalExceptionHandler;
 import com.oliveira.taskstodo.models.User;
@@ -22,28 +23,37 @@ import com.oliveira.taskstodo.models.User;
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private AuthenticationManager authenticationManager;
-
     private JWTUtil jwtUtil;
 
     public JWTAuthenticationFilter(AuthenticationManager authenticationManager, JWTUtil jwtUtil) {
         setAuthenticationFailureHandler(new GlobalExceptionHandler());
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
+
+        // this set the path, witout it the spring user the pattern /login
+        //setFilterProcessesUrl("//localhost:8080/login");
+        //setFilterProcessesUrl("/login");
+
     }
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request,
             HttpServletResponse response) throws AuthenticationException {
         try {
-            User userCredentials = new ObjectMapper().readValue(request.getInputStream(), User.class);
+            User userCredentials = new ObjectMapper()
+                .readValue(request.getInputStream(), User.class);
 
-            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                    userCredentials.getUsername(), userCredentials.getPassword(), new ArrayList<>());
+            UsernamePasswordAuthenticationToken authToken = 
+                new UsernamePasswordAuthenticationToken(
+                    userCredentials.getUsername(), userCredentials.getPassword(), 
+                    new ArrayList<>());
 
             Authentication authentication = this.authenticationManager.authenticate(authToken);
             return authentication;
+
         } catch (IOException e) {
             throw new RuntimeException(e);
+
         }
     }
 
@@ -56,6 +66,11 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         String token = this.jwtUtil.generateToken(username);
         response.addHeader("Authorization", "Bearer " + token);
         response.addHeader("access-control-expose-headers", "Authorization");
+
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setHeader("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
+        response.setHeader("Access-Control-Allow-Headers", "DNT, X-CustomHeader, Keep-Alive, User-Agent, X-Requested-With, If-Modified-Since, Cache-Control, Content-Type, Content-Range, Range");
+
     }
 
 }

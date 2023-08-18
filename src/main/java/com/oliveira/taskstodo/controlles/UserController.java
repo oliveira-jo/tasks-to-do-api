@@ -26,7 +26,6 @@ import jakarta.validation.Valid;
 @RequestMapping("/user")
 @Validated
 public class UserController {
-    
 
     @Autowired
     private UserService userService;
@@ -45,7 +44,7 @@ public class UserController {
         User user = this.userService.fromDTO(obj);
         User newUser = this.userService.create(user);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{id}").buildAndExpand(newUser.getId()).toUri();
+            .path("/{id}").buildAndExpand(newUser.getId()).toUri();
         return ResponseEntity.created(uri).build();
     }
 

@@ -34,9 +34,7 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-
     public User findById(Long id){
-
         // There are anyone logged / is admin / have the same id
         UserSpringSecurity userSpringSecurity = authenticated();
         if ( !Objects.nonNull(userSpringSecurity)              
@@ -47,8 +45,8 @@ public class UserService {
         //return the user from database if existe or empy if not
         Optional<User> user = this.userRepository.findById(id);
         //in this case using an Arrow Funcion an fuincion inside the other
-
         // new Exception -> stop application and new RuntimeException -> just show without stop 
+        
         return user.orElseThrow(() -> new ObjectNotFoundException( //exception created in exceptions
             "Usuário não encontrado! id: " + id + ", Tipo: " + User.class.getName()
         ));
@@ -70,33 +68,32 @@ public class UserService {
         obj.setProfiles(Stream.of(ProfileEnum.USER.getCode()).collect(Collectors.toSet()));
         this.userRepository.save(obj);
         return obj;
+
     }
 
     @Transactional
     public User update(User obj){
         //use the funcion that we have in this class
         User newObj = findById(obj.getId());
+        newObj.setUsername(obj.getUsername());
         // User can update only the password
         newObj.setPassword(obj.getPassword());
         //update encrypt password
         newObj.setPassword(this.bCryptPasswordEncoder.encode(obj.getPassword()));
         return this.userRepository.save(newObj);
+
     }
 
     public void delete(Long id){
         findById(id);
         // there are a chance to get a error if you delete a entity that have 
         // relation with another entity, for this we put a try-catch here
-        //try {
-        //    this.userRepository.deleteById(id);
-        //} catch (Exception e) {
-        //    throw new RuntimeErrorException(e, "Não é possivel excluir porque ha entidades relacionadas!");
-        //}
         try {
             this.userRepository.deleteById(id);
         } catch (Exception e) {
             throw new DataBindingViolationException("Não é possivel excluir porque há entidades relacionadas!");
         }
+
     }
 
     //how is in the context in this moment, with have anybody authenticated
@@ -106,6 +103,7 @@ public class UserService {
         } catch (AuthenticationException e) {
             return null;
         }
+
     }
 
     public User fromDTO(@Valid UserCreateDTO obj) {
@@ -113,13 +111,16 @@ public class UserService {
         user.setUsername(obj.getUsername());
         user.setPassword(obj.getPassword());
         return user;
+
     }
 
     public User fromDTO(@Valid UserUpdateDTO obj) {
         User user = new User();
         user.setId(obj.getId());
+        user.setUsername(obj.getUsername());
         user.setPassword(obj.getPassword());
         return user;
+
     }
 
 }

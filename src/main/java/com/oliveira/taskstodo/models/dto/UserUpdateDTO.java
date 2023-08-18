@@ -15,6 +15,10 @@ public class UserUpdateDTO {
     private Long id;
 
     @NotBlank
+    @Size(min = 2, max = 100)
+    private String username;
+    
+    @NotBlank
     @Size(min = 8, max = 60)
     private String password;
 

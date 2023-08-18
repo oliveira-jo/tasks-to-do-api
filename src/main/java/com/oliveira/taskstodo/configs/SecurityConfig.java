@@ -1,7 +1,5 @@
 package com.oliveira.taskstodo.configs;
 
-import java.util.Arrays;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,8 +15,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 import com.oliveira.taskstodo.security.JWTAuthenticationFilter;
@@ -39,56 +37,51 @@ public class SecurityConfig {
     @Autowired
     private JWTUtil jwtUtil;
 
-    //private static final String[] PUBLIC_MATCHERS = { "/" };
-    //private static final String[] PUBLIC_MATCHERS_POST = { "/user", "/login" };
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, HandlerMappingIntrospector introspector) throws Exception {
 
         MvcRequestMatcher.Builder mvcMatcherBuilder = new MvcRequestMatcher.Builder(introspector);
 
-        //http.cors().and().csrf().disable();
         http.cors(cors -> cors.disable());
         http.csrf(csrf -> csrf.disable());
 
         AuthenticationManagerBuilder authenticationManagerBuilder = http
-            .getSharedObject(AuthenticationManagerBuilder.class);
+                        .getSharedObject(AuthenticationManagerBuilder.class);
         authenticationManagerBuilder.userDetailsService(this.userDetailsService)
-            .passwordEncoder(bCryptPasswordEncoder());
+                        .passwordEncoder(bCryptPasswordEncoder());
         this.authenticationManager = authenticationManagerBuilder.build();
 
-        http.authorizeHttpRequests( authz -> authz
-            .requestMatchers(mvcMatcherBuilder.pattern(HttpMethod.POST, "/user")).permitAll()
+        http.authorizeHttpRequests(authz -> authz
             .requestMatchers(mvcMatcherBuilder.pattern(HttpMethod.POST, "/login")).permitAll()
-            //.requestMatchers(HttpMethod.POST, PUBLIC_MATCHERS_POST).permitAll()
-
+            .requestMatchers(mvcMatcherBuilder.pattern(HttpMethod.POST, "/user")).permitAll()
             .requestMatchers(mvcMatcherBuilder.pattern("/**")).permitAll()
-            //.requestMatchers(PUBLIC_MATCHERS).permitAll()
-
-            .anyRequest().authenticated()
-        );
-
+            .anyRequest().authenticated());
+            
         http.authenticationManager(authenticationManager);
 
         http.addFilter(new JWTAuthenticationFilter(this.authenticationManager, this.jwtUtil));
         http.addFilter(new JWTAuthorizationFilter(this.authenticationManager, this.jwtUtil,
                         this.userDetailsService));
 
-        //policy without state
+        //http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.sessionManagement(sessionManagement -> sessionManagement
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-
+        
         return http.build();
     }
 
     @Bean
-    CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration().applyPermitDefaultValues();
-        configuration.setAllowedMethods(Arrays.asList("POST", "GET", "PUT", "DELETE"));
-        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
+    public CorsFilter corsConfigurationSource() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+        config.addAllowedOrigin("http://127.0.0.1:5500"); // Domínio do seu frontend
+        config.addAllowedHeader("*");
+        config.addAllowedMethod("*");
+        source.registerCorsConfiguration("/**", config);
+        return new CorsFilter(source);
     }
+
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
