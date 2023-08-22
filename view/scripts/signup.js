@@ -18,9 +18,18 @@ async function signup() {
   
     if (response.ok) {
       showToast("#okToast");
+      window.setTimeout(function () {
+        window.location = "/view/login.html";
+      }, 2000);
+
     } else {
       showToast("#errorToast");
+      window.setTimeout(function () {
+        window.location = "/view/signup.html";
+      }, 2000);
+
     }
+
   }
   
   function showToast(id) {

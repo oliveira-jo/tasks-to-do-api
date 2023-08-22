@@ -21,14 +21,20 @@ async function login() {
     window.localStorage.setItem(key, token);
   
     if (response.ok) {
+      
       showToast("#okToast");
+      window.setTimeout(function () {
+        window.location = "/view/index.html";
+      }, 2000);
+
     } else {
       showToast("#errorToast");
+      window.setTimeout(function () {
+        window.location = "/view/login.html";
+      }, 2000);
+
     } 
   
-    window.setTimeout(function () {
-      window.location = "/view/index.html";
-    }, 2000);
   }
   
   function showToast(id) {
