@@ -17,100 +17,95 @@
   </head>
 
   <body>
-    <!-- OK Toast -->
-    <div
-      id="okToast"
-      class="toast"
-      role="alert"
-      aria-live="assertive"
-      aria-atomic="true"
-    >
-      <div class="toast-header">
-        <strong class="me-auto">Success</strong>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="toast"
-          aria-label="Close"
-        ></button>
-      </div>
-      <div class="toast-body">Successfully registered user.</div>
-    </div>
-    <!-- Error Toast -->
-    <div
-      id="errorToast"
-      class="toast"
-      role="alert"
-      aria-live="assertive"
-      aria-atomic="true"
-    >
-      <div class="toast-header">
-        <strong class="me-auto">Error</strong>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="toast"
-          aria-label="Close"
-        ></button>
-      </div>
-      <div class="toast-body">Error when creating a new user.</div>
-    </div>
+    <section class="vh-100 bg-primary p-2 text-dark bg-opacity-50">
+      <div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
 
-    <div class="vh-100 d-flex justify-content-center align-items-center">
-      <div class="container">
-        <div class="row d-flex justify-content-center">
-          <div class="col-12 col-md-8 col-lg-6">
-            <div class="card bg-white">
-              <div class="card-body p-5">
-                <form class="mb-3 mt-md-4">
-                  <h2 class="fw-bold mb-2 text-uppercase">
-                    To-Do Simple App - SignUp
-                  </h2>
-                  <p class="mb-2">
-                    Please enter your username and password to create your
-                    account!
+          <div class="col-md-8 col-lg-7 col-xl-6">
+            <img src="../view/img/checklist.png"
+              class="img-fluid" alt="Phone image">
+          </div>
+          
+          <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+            <div class="card bg-dark bg-opacity-75 text-white" style="border-radius: 1rem;">
+
+              <div class="card-body p-5 text-center">
+
+                <form class="mb-md-5 mt-md-4 pb-5">
+    
+                  <h2 class="fw-bold mb-2 text-uppercase">INSCREVA-SE </h2>
+                  <p class="text-white-50 mb-5">
+                    Por favor, entre com um nome e uma senha!
                   </p>
-                  <div class="mb-3">
-                    <label class="form-label">Username</label>
-                    <input
-                      type="text"
-                      class="form-control"
+    
+                  <div class="form-outline form-white mb-4">
+                    <input 
+                      type="text" 
+                      id="username" 
+                      class="form-control form-control-lg" 
+                      placeholder="Usuário"
                       required="true"
-                      id="username"
                     />
                   </div>
-                  <div class="mb-3">
-                    <label for="password" class="form-label">Password</label>
-                    <input
-                      type="password"
-                      class="form-control"
-                      placeholder="*******"
+    
+                  <div class="form-outline form-white mb-4">
+                    <input 
+                      type="password" 
+                      id="password" 
+                      class="form-control form-control-lg" 
+                      placeholder="Senha"
                       required="true"
-                      id="password"
                     />
                   </div>
-                  <div class="d-grid">
-                    <button
-                      type="button"
-                      id="requestBtn"
-                      class="btn btn-outline-dark"
-                      onclick="signup()"
-                    >
-                      Signup
-                    </button>
-                  </div>
+    
+                  <button 
+                    class="btn btn-outline-light btn-lg px-5" 
+                    onclick="signup()"
+                    type="button"
+                  >
+                    Cadastrar
+                  </button>
+                  
                 </form>
+    
                 <div>
-                  <p class="mb-0 text-center">
-                    Already have an account?
-                    <a href="login.html" class="text-primary fw-bold">Login</a>
+                  <p class="mb-0">
+                    Já tem uma conta?
+                    <a href="login.html" class="text-primary-50 fw-bold">
+                      Fazer Login
+                    </a>
                   </p>
                 </div>
+
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+
+      <!-- Toasts -->
+      <!-- Ok -->
+      <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="okToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+          <div class="toast-header">
+            <strong class="me-auto">Sucesso</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+          </div>
+          <div class="toast-body"> Usuário cadastrado com Sucesso! </div>
+        </div>
+      </div>
+      <!-- Error -->
+      <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="errorToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+          <div class="toast-header">
+            <strong class="me-auto">Erro</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+          </div>
+          <div class="toast-body"> Erro ao cadastrado um usuário. </div>
+        </div>
+      </div>
+
+    </section>
+
   </body>
 </html>

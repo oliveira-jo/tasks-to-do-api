@@ -30,10 +30,6 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
 
-        // this set the path, witout it the spring user the pattern /login
-        //setFilterProcessesUrl("//localhost:8080/login");
-        //setFilterProcessesUrl("/login");
-
     }
 
     @Override

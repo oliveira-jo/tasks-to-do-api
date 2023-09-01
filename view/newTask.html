@@ -17,46 +17,7 @@
   </head>
 
   <body>
-    <!-- OK Toast -->
-    <div
-      id="okToast"
-      class="toast"
-      role="alert"
-      aria-live="assertive"
-      aria-atomic="true"
-    >
-      <div class="toast-header">
-        <strong class="me-auto">Success</strong>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="toast"
-          aria-label="Close"
-        ></button>
-      </div>
-      <div class="toast-body">Successfully registered task.</div>
-    </div>
-    <!-- Error Toast -->
-    <div
-      id="errorToast"
-      class="toast"
-      role="alert"
-      aria-live="assertive"
-      aria-atomic="true"
-    >
-      <div class="toast-header">
-        <strong class="me-auto">Error</strong>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="toast"
-          aria-label="Close"
-        ></button>
-      </div>
-      <div class="toast-body">Error when creating a new task.</div>
-    </div>
-
-    <div class="vh-100 d-flex justify-content-center align-items-center">
+    <section class="vh-100  bg-primary d-flex justify-content-center align-items-center bg-opacity-50">
       <div class="container">
         <div class="row d-flex justify-content-center">
           <div class="col-12 col-md-8 col-lg-6">
@@ -64,7 +25,7 @@
               <div class="card-body p-5">
                 <form class="mb-3 mt-md-4">
                   <h2 class="fw-bold mb-2 text-uppercase">
-                    Adicionar Tarefa:
+                    Nova Tarefa:
                   </h2>
                   <div class="mb-3">
                     <label class="form-label">Descrição: </label>
@@ -89,7 +50,7 @@
                 <div>
                   <p class="mb-0 text-center">
                     Pagina Inicial
-                    <a href="index.html" class="text-primary fw-bold">Index</a>
+                    <a href="index.html" class="text-primary fw-bold">Todas as Taredas</a>
                   </p>
                 </div>
               </div>
@@ -97,6 +58,29 @@
           </div>
         </div>
       </div>
-    </div>
+
+      <!-- Toasts -->
+      <!-- Ok -->
+      <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="okToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+          <div class="toast-header">
+            <strong class="me-auto">Sucesso</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+          </div>
+          <div class="toast-body"> Tarefa cadastrada com sucesso! </div>
+        </div>
+      </div>
+      <!-- Error -->
+      <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="errorToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+          <div class="toast-header">
+            <strong class="me-auto">Erro</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+          </div>
+          <div class="toast-body"> Erro ao cadastrar um tarefa. </div>
+        </div>
+      </div>
+
+    </section>
   </body>
 </html>

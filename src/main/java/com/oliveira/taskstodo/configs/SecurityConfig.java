@@ -13,12 +13,14 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
+import com.oliveira.taskstodo.exceptions.GlobalExceptionHandler;
 import com.oliveira.taskstodo.security.JWTAuthenticationFilter;
 import com.oliveira.taskstodo.security.JWTAuthorizationFilter;
 import com.oliveira.taskstodo.security.JWTUtil;
@@ -82,6 +84,10 @@ public class SecurityConfig {
         return new CorsFilter(source);
     }
 
+    @Bean
+    public AuthenticationFailureHandler authenticationFailureHandler() {
+        return new GlobalExceptionHandler();
+    }
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {

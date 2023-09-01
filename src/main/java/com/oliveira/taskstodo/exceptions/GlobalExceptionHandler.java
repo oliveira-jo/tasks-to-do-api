@@ -40,7 +40,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler
     private boolean printStackTrace;
 
     
-    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY) //422
     protected ResponseEntity<Object> handleMethodArgumentNotValid (
         MethodArgumentNotValidException methodArgumentNotValidException,
         HttpHeaders headers,
@@ -156,7 +156,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler
     }
 
 
-
     private ResponseEntity<Object> buildErrorResponse(
             Exception exception,
             HttpStatus httpStatus,
@@ -179,11 +178,18 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
             AuthenticationException exception) throws IOException, ServletException {
-        Integer status = HttpStatus.UNAUTHORIZED.value(); 
+        Integer status = HttpStatus.UNAUTHORIZED.value(); //401 UNAUTHORIZED
         response.setStatus(status);
         response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
+        //with this line i can resolve the problem that
+        //i can't get the response.status === 401, *******   
+        response.addHeader("Access-Control-Allow-Origin", "*");
+
         ErrorResponse errorResponse = new ErrorResponse(status, "Username or Password are invalid!");
-        response.getWriter().append(errorResponse.toJson());
+        response.getWriter().write(errorResponse.toJson());
+
     }
 
 }

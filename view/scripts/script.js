@@ -6,30 +6,26 @@ function hideLoader() {
 
 function show(tasks) {
   let tab = 
-    `<thead>
-        <th scope="col"> # </th>
-        <th scope="col"> Description </th>
-        <th scope="col">  </th>
-      </thead>`;
-
+    ` 
+    `;
   for (let task of tasks) {
     tab += 
-      ` <tr>
-          <td scope="row">${task.id}</td>
-          <td>${task.description}</td>
-          <td> 
+      ` 
+      <div class="col" >
+        <div class="card" >    
+          <div class="card-body">
+            <h5 class="card-title">${task.id} - Tarefa </h5>
+            <p class="card-text">${task.description}</p>
             <button 
-              class="btn" 
+              class="btn btn-sm btn-outline-danger" 
               type="button" 
               id="${task.id}" 
-              onclick="deleteTask(${task.id})" 
-              >
+              onclick="deleteTask(${task.id})" >
                 Excluir
-
             </button>
-            
-          </td>
-        </tr> 
+          </div>
+        </div>
+      </div>
       `;
   }
   document.getElementById("tasks").innerHTML = tab;
@@ -77,7 +73,7 @@ async function addTask() {
     showToast("#errorToast");
     window.setTimeout(function () {
       window.location = "/view/newTask.html";
-    }, 500);
+    }, 1000);
   }
 
 }

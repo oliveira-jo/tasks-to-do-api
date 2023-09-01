@@ -17,92 +17,55 @@
   </head>
 
   <body>
-    <!-- OK Toast -->
-    <div
-      id="okToast"
-      class="toast"
-      role="alert"
-      aria-live="assertive"
-      aria-atomic="true"
-    >
-      <div class="toast-header">
-        <strong class="me-auto">Success</strong>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="toast"
-          aria-label="Close"
-        ></button>
-      </div>
-      <div class="toast-body">Successfully Login.</div>
-    </div>
+    <section class="vh-100 bg-primary p-2 text-dark bg-opacity-50">
+      <div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+          <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+            <div class="card bg-dark bg-opacity-75 text-white" style="border-radius: 1rem;">
+              <div class="card-body p-5 text-center">
 
-    <!-- Error Toast -->
-    <div
-      id="errorToast"
-      class="toast"
-      role="alert"
-      aria-live="assertive"
-      aria-atomic="true"
-    >
-      <div class="toast-header">
-        <strong class="me-auto">Error</strong>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="toast"
-          aria-label="Close"
-        ></button>
-      </div>
-      <div class="toast-body">Error in login user ou password.</div>
-    </div>
+                <form class="mb-md-5 mt-md-4 pb-5">
+                  <h2 class="fw-bold mb-2 text-uppercase">Login </h2>
+                  <p class="text-white-50 mb-5">Por favor, entre com seu usuario e senha!</p>
+                  
+                  <div class="form-outline form-white mb-4">
+                    <input 
+                      type="text" 
+                      id="username" 
+                      class="form-control form-control-lg" 
+                      placeholder="Usuário"
+                      required="true"
+                    />
+                    
+                  </div>
+    
+                  <div class="form-outline form-white mb-4">
+                    <input 
+                      type="password" 
+                      id="password" 
+                      class="form-control form-control-lg" 
+                      placeholder="Senha"
+                      required="true"
+                    />
+                    
+                  </div>
 
-    <div class="vh-100 d-flex justify-content-center align-items-center">
-      <div class="container">
-        <div class="row d-flex justify-content-center">
-          <div class="col-12 col-md-8 col-lg-6">
-            <div class="card bg-white">
-              <div class="card-body p-5">
-                <form class="mb-3 mt-md-4">
-                  <h2 class="fw-bold mb-2 text-uppercase">
-                    To-Do Simple App - Login
-                  </h2>
-                  <p class="mb-2">Please enter your login and password!</p>
-                  <div class="mb-3">
-                    <label class="form-label">Username</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      required="true"
-                      id="username"
-                    />
-                  </div>
-                  <div class="mb-3">
-                    <label for="password" class="form-label">Password</label>
-                    <input
-                      type="password"
-                      class="form-control"
-                      placeholder="*******"
-                      required="true"
-                      id="password"
-                    />
-                  </div>
-                  <div class="d-grid">
-                    <button
-                      class="btn btn-outline-dark"
-                      onclick="login()"
-                      type="button"
-                    >
-                      Login
-                    </button>
-                  </div>
+                  <button 
+                    class="btn btn-outline-light btn-lg px-5" 
+                    onclick="login()"
+                    type="button"
+                  >
+                    Entrar
+                  </button>
+                  
                 </form>
+    
                 <div>
-                  <p class="mb-0 text-center">
-                    Don't have an account?
-                    <a href="signup.html" class="text-primary fw-bold"
-                      >Sign Up</a
-                    >
+                  <p class="mb-0">
+                    Não tem uma conta? 
+                    <a href="signup.html" class="text-primary-50 fw-bold">
+                      Cadastrar-se
+                    </a>
                   </p>
                 </div>
               </div>
@@ -110,6 +73,30 @@
           </div>
         </div>
       </div>
-    </div>
+
+      <!-- Toasts -->
+      <!-- Ok -->
+      <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="okToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+          <div class="toast-header">
+            <strong class="me-auto">Sucesso</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+          </div>
+          <div class="toast-body"> Usuário Logado com sucesso! </div>
+        </div>
+      </div>
+      <!-- Error -->
+      <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="errorLogin" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+          <div class="toast-header">
+            <strong class="me-auto">Erro</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+          </div>
+          <div class="toast-body"> Username ou senha estão inválidos! </div>
+        </div>
+      </div>
+
+    </section>
+
   </body>
 </html>

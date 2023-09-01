@@ -15,34 +15,34 @@
     </head>
 <body>    
 
-    <div class="d-flex justify-content-center">
-        <div class="spinner-border" role="status" id="loading"></div>
-    </div>
+    <section class="vh-100 bg-primary p-2 text-dark bg-opacity-50">
 
-    <div class="d-flex">
-        <p class="h1 text-center flex-grow-1">Suas tarefas</p>
-        <button
-          type="button"
-          class="btn btn-outline-dark text-left"
-          onclick="localStorage.removeItem('Authorization');
-            window.location = '/view/login.html'"
-        >
-          SignOut
-        </button>
-    </div>
+        <div class="d-flex justify-content-center">
+            <div class="spinner-border" role="status" id="loading"></div>
+        </div>
+
+        <div class="d-flex">
+            <p class="h1 text-center flex-grow-1">Suas tarefas</p>
+            <button
+            type="button "
+            class="btn btn-outline-primary"
+            onclick="localStorage.removeItem('Authorization');
+                window.location = '/view/login.html'"
+            >
+            Sair
+            </button>
+        </div>
     
-    <div class="container">
-        
-        <table class="table table-striped table-primary">
-            <tbody id="tasks"></tbody>
-        </table>
+        <div class="container py-4">
+            <div class="row row-cols-1 row-cols-md-3 g-4" id="tasks">  <!-- table -->
+                
+            </div>
+            <p class="mb-0 text-center py-4">
+                <a href="newTask.html" class="btn btn-success"> Criar Tarefa </a>
+            </p>
+        </div>
 
-        <p class="mb-0 text-center">
-            <a href="newTask.html" class="text-primary fw-bold"> Nova Tarefa </a>
-            +
-        </p>
-
-    </div>
+    </section>
 
     <!-- Optional JavaScript; choose one of the two! -->
 
